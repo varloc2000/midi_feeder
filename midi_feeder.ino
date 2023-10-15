@@ -1,41 +1,48 @@
 #if defined(ESP8266)
-#pragma message "INFO: ESP8266 stuff happening!"
+    #pragma message "INFO: ESP8266 stuff happening!"
+    #define MIDI_PAD_PIN A0
+    #define MIDI_NOTE_INDICATOR_PIN LED_BUILTIN
 #elif defined(ESP32)
-#pragma message "INFO: ESP32 stuff happening!"
+    #pragma message "INFO: ESP32 stuff happening!"
+    #define MIDI_PAD_PIN 13
+    #define MIDI_NOTE_INDICATOR_PIN 33
 #else
-#error "ERROR: This ain't a ESP8266 or ESP32, dumbo!"
+    #error "ERROR: This ain't a ESP8266 or ESP32, dumbo!"
 #endif
 
 #define MODE_DEBUG true
-#define SERIAL_RATE 9600
+
+#if defined(MODE_DEBUG)
+    #define SERIAL_RATE 9600 // ESP8266 NodeMCU V3 recommended 
+#else
+    #define SERIAL_RATE 31250 // MIDI baud rate
+#endif
 
 // Piezo/MIDI definitions
-#define MIDI_PAD_PIN 13
-#define MIDI_NOTE_INDICATOR_PIN 33
 #define MIDI_THRESHOLD_MIN 30 // sygnal < MIDI_THRESHOLD_MIN is treated as no sygnal
-#define MIDI_NUM_THRESHOLD_LEVELS 7
-#define MIDI_NOTE_INDICATOR_TIME 100
-#define MIDI_NOTE_DISPLAY_TIME 300
+#define MIDI_NOTE_INDICATOR_TIME 100 // How long led will indicate a note
+#define MIDI_DEBUG_MESSAGE_PERIOD 1000 // How long led will indicate a note
 //Program defines (time measured in milliseconds)
-#define MIDI_SIGNAL_BUFFER_SIZE 100//30
-#define MIDI_PEAK_BUFFER_SIZE 30//30
+#define MIDI_SIGNAL_BUFFER_SIZE 100 // 30
+#define MIDI_PEAK_BUFFER_SIZE 30 // 30
 #define MIDI_MAX_TIME_BETWEEN_PEAKS 20
 #define MIDI_MIN_TIME_BETWEEN_NOTES 50
 // General MIDI drum code numbers
 // See http://soundprogramming.net/file-formats/general-midi-drum-note-numbers/
 #define MIDI_NOTE_SNARE_CMD 38
-#define MIDI_NOTE_HAND_CLAP_CMD 39
-#define MIDI_NOTE_SNARE_E_CMD 40
-#define MIDI_NOTE_FLOOR_TOM_CMD 43
-#define MIDI_NOTE_COWBEL_CMD 56
-#define MIDI_NOTE_BONGO_HIGH_CMD 60
-#define MIDI_NOTE_BONGO_LOW_CMD 61
-#define MIDI_NOTE_CONGA_DEAD_STROKE_CMD 62
-#define MIDI_NOTE_CONGA_CMD 63
-#define MIDI_COMMAND_CONTROL_CHANGE 0xB0
+// #define MIDI_NOTE_HAND_CLAP_CMD 39
+// #define MIDI_NOTE_SNARE_E_CMD 40
+// #define MIDI_NOTE_FLOOR_TOM_CMD 43
+// #define MIDI_NOTE_COWBEL_CMD 56
+// #define MIDI_NOTE_BONGO_HIGH_CMD 60
+// #define MIDI_NOTE_BONGO_LOW_CMD 61
+// #define MIDI_NOTE_CONGA_DEAD_STROKE_CMD 62
+// #define MIDI_NOTE_CONGA_CMD 63
+// #define MIDI_COMMAND_CONTROL_CHANGE 0xB0
 #define MIDI_COMMAND_NOTE_ON 0x90
 #define MIDI_COMMAND_NOTE_OFF 0x80
 #define MIDI_MAX_VELOCITY 127
+#define MIDI_MIN_VELOCITY 40
 // END: Piezo/MIDI definitions
 
 // MIDI variables
@@ -47,6 +54,7 @@ unsigned short peakBuffer[MIDI_PEAK_BUFFER_SIZE];
 unsigned short noteReadyVelocity;
 unsigned long lastPeakTime;
 unsigned long lastNoteTime;
+unsigned long lastDebugMessageTime;
 bool isNoteReady;
 bool isLastPeakZeroed;
 bool isNoteIndicationOn = false; // Only one led indicator for all notes.
@@ -59,7 +67,7 @@ void checkNoteIndication()
 {
     unsigned long currentTime = millis();
 
-    if (isNoteIndicationOn) {
+    if (true == isNoteIndicationOn) {
         digitalWrite(MIDI_NOTE_INDICATOR_PIN, HIGH);
         isNoteIndicationOn = false;
     } else if ((currentTime - lastNoteTime) > MIDI_NOTE_INDICATOR_TIME) {
@@ -75,17 +83,17 @@ void checkNoteIndication()
  */
 void midiNoteOn(int note, byte midiVelocity)
 {
-	#if defined(MODE_DEBUG)
-		// Debug serial
-		Serial.print("ON: ");
-	    Serial.print(note);
-	    Serial.print(":");
-	    Serial.print(midiVelocity);
-	    Serial.println();
-	#else
-	    Serial.write(MIDI_COMMAND_NOTE_ON);
-   		Serial.write((byte) note);
-   		Serial.write((byte) midiVelocity);
+    #if defined(MODE_DEBUG)
+        // Debug serial
+        Serial.print("ON: ");
+        Serial.print(note);
+        Serial.print(":");
+        Serial.print(midiVelocity);
+        Serial.println();
+    #else
+        Serial.write(MIDI_COMMAND_NOTE_ON);
+        Serial.write((byte) note);
+        Serial.write((byte) midiVelocity);
     #endif
 }
 
@@ -97,15 +105,15 @@ void midiNoteOn(int note, byte midiVelocity)
  */
 void midiNoteOff(int note, byte midiVelocity)
 {
-	#if defined(MODE_DEBUG)
-		// Debug serial
-		Serial.print("OFF: ");
-	    Serial.print(note);
-	    Serial.println();
-	#else
-		Serial.write(MIDI_COMMAND_NOTE_OFF);
-		Serial.write(note);
-		Serial.write(0);
+    #if defined(MODE_DEBUG)
+        // Debug serial
+        Serial.print("OFF: ");
+        Serial.print(note);
+        Serial.println();
+    #else
+        Serial.write(MIDI_COMMAND_NOTE_OFF);
+        Serial.write(note);
+        Serial.write(0);
     #endif
 }
 
@@ -124,6 +132,7 @@ void noteFire(int note, unsigned short velocity)
     midiNoteOn(note, velocity);
     midiNoteOff(note, velocity);
 
+    lastNoteTime = millis();
     isNoteIndicationOn = true;
 }
 
@@ -136,7 +145,7 @@ void noteFire(int note, unsigned short velocity)
  */
 void recordNewPeak(short newPeak)
 {
-    isLastPeakZeroed = (0 === newPeak);
+    isLastPeakZeroed = (0 == newPeak);
 
     unsigned long currentTime = millis();
     lastPeakTime = currentTime;
@@ -144,32 +153,46 @@ void recordNewPeak(short newPeak)
     // new peak recorded (newPeak)
     peakBuffer[currentPeakIndex] = newPeak;
 
-    //get previous peak from buffer
+    // get previous peak from buffer
     short prevPeakIndex = currentPeakIndex - 1;
     if (prevPeakIndex < 0) prevPeakIndex = MIDI_PEAK_BUFFER_SIZE - 1;
     unsigned short prevPeak = peakBuffer[prevPeakIndex];
 
     if (newPeak > prevPeak && (currentTime - lastNoteTime) > MIDI_MIN_TIME_BETWEEN_NOTES) {
-    	// 1) note ready - if new peak >= previous peak - signal wave is raising but not on peak.
-        noteReady = true;
+
+        // 1) note ready - if new peak >= previous peak - signal wave is raising but not on peak.
+        isNoteReady = true;
         if (newPeak > noteReadyVelocity) noteReadyVelocity = newPeak;
-    } else if (newPeak < prevPeak && true === noteReady) {
+
+    } else if (newPeak < prevPeak && true == isNoteReady) {
+
         // 2) note fire - if new peak < previous peak and previous peak was a note ready - signal wave started to go down after raising.
         unsigned short velocity = noteReadyVelocity;
 
-        // TODO: map velocity from raw analog input to 0-127 range of midi velocity before cheking max.
-        // velocity = map(velocity, 0, 1023, 0, MIDI_MAX_VELOCITY);
-        if (velocity > MIDI_MAX_VELOCITY) velocity = MIDI_MAX_VELOCITY;
+        #if defined(MODE_DEBUG)
+            Serial.print("Velocity RAW: ");
+            Serial.print(velocity);
+            Serial.println();
+        #endif
+        velocity = map(velocity, MIDI_THRESHOLD_MIN, 1023, MIDI_MIN_VELOCITY, MIDI_MAX_VELOCITY);
 
         noteFire(MIDI_NOTE_SNARE_CMD, velocity);
 
-        noteReady = false;
+        isNoteReady = false;
         noteReadyVelocity = 0;
-        lastNoteTime = currentTime;
     }
 
     // 3) no note - if new peak < previous peak and previous peak was NOT note ready - signal wave going down not after raising.
     checkNoteIndication();
+
+    #if defined(MODE_DEBUG)
+        if ((currentTime - lastDebugMessageTime) > MIDI_DEBUG_MESSAGE_PERIOD) {
+            Serial.print("DEBUG newPeak: ");
+            Serial.print(newPeak);
+            Serial.println();
+            lastDebugMessageTime = currentTime;
+        }
+    #endif
 
     currentPeakIndex++;
     if (currentPeakIndex == MIDI_PEAK_BUFFER_SIZE) currentPeakIndex = 0;
@@ -183,9 +206,12 @@ void listenPad()
     signalBuffer[currentSignalIndex] = newSignal;
 
     if (newSignal < MIDI_THRESHOLD_MIN) {
-        if (false === isLastPeakZeroed && (currentTime - lastPeakTime) > MIDI_MAX_TIME_BETWEEN_PEAKS) {
+
+        if (false == isLastPeakZeroed && (currentTime - lastPeakTime) > MIDI_MAX_TIME_BETWEEN_PEAKS) {
+
             recordNewPeak(0);
         } else {
+
             short prevSignalIndex = currentSignalIndex - 1;
             if (prevSignalIndex < 0) prevSignalIndex = MIDI_SIGNAL_BUFFER_SIZE - 1;
 
@@ -214,12 +240,12 @@ void listenPad()
     }
 
     currentSignalIndex++;
-    if (currentSignalIndex == SIGNAL_BUFFER_SIZE) currentSignalIndex = 0;
+    if (currentSignalIndex == MIDI_SIGNAL_BUFFER_SIZE) currentSignalIndex = 0;
 }
 
 void initMidi()
 {
-	currentSignalIndex = 0;
+    currentSignalIndex = 0;
     currentPeakIndex = 0;
     memset(signalBuffer, 0, sizeof(signalBuffer));
     memset(peakBuffer, 0, sizeof(peakBuffer));
@@ -229,13 +255,15 @@ void initMidi()
     isNoteIndicationOn = false;
     lastPeakTime = 0;
     lastNoteTime = 0;
+    lastDebugMessageTime = 0;
 }
 
 void setup() {
-    Serial.begin(SERIAL_RATE);
-
+    pinMode(MIDI_NOTE_INDICATOR_PIN, OUTPUT);
     pinMode(MIDI_PAD_PIN, OUTPUT);
     digitalWrite(MIDI_PAD_PIN, LOW);
+
+    Serial.begin(SERIAL_RATE);
 
     initMidi();
 }
