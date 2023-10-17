@@ -1,11 +1,17 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
+
 #if defined(ESP8266)
     #pragma message "INFO: ESP8266 stuff happening!"
     #define MIDI_PAD_PIN A0
     #define MIDI_NOTE_INDICATOR_PIN LED_BUILTIN
+    #define ADC_RESOLUTION_MAX_VALUE 1023
 #elif defined(ESP32)
     #pragma message "INFO: ESP32 stuff happening!"
     #define MIDI_PAD_PIN 13
     #define MIDI_NOTE_INDICATOR_PIN 33
+    #define ADC_RESOLUTION_MAX_VALUE 4095
 #else
     #error "ERROR: This ain't a ESP8266 or ESP32, dumbo!"
 #endif
@@ -45,6 +51,18 @@
 #define MIDI_MIN_VELOCITY 40
 // END: Piezo/MIDI definitions
 
+// WIFI definitions
+#define WIFI_CLIENT_RECONNECT_PERIOD 5000
+// WIFI definitions
+
+const char * const ssid = "WIFItoNawetNieEstOno";
+const char * const password = "FleXa123";
+// const char *ssid     = "WIFItoNawetNieEstOno";
+// const char *password = "FleXa123";
+const char * const host = "127.0.0.1";
+const uint16_t port = 8080;
+
+
 // MIDI variables
 // Ring buffers to store analog signal and peaks
 short currentSignalIndex;
@@ -59,6 +77,12 @@ bool isNoteReady;
 bool isLastPeakZeroed;
 bool isNoteIndicationOn = false; // Only one led indicator for all notes.
 
+unsigned long lastWiFiConnectionTime;
+unsigned long lastWiFiReonnectionAttemptTime;
+
+String ip = "";
+
+char buffer[15];
 
 /**
  * Check is any note was triggered recently to blink with note indicator
@@ -174,7 +198,7 @@ void recordNewPeak(short newPeak)
             Serial.print(velocity);
             Serial.println();
         #endif
-        velocity = map(velocity, MIDI_THRESHOLD_MIN, 1023, MIDI_MIN_VELOCITY, MIDI_MAX_VELOCITY);
+        velocity = map(velocity, MIDI_THRESHOLD_MIN, ADC_RESOLUTION_MAX_VALUE, MIDI_MIN_VELOCITY, MIDI_MAX_VELOCITY);
 
         noteFire(MIDI_NOTE_SNARE_CMD, velocity);
 
@@ -243,6 +267,109 @@ void listenPad()
     if (currentSignalIndex == MIDI_SIGNAL_BUFFER_SIZE) currentSignalIndex = 0;
 }
 
+
+void postHttpRequestSimple(String httpRequestData)
+{
+    unsigned long currentTime = millis();
+
+    if (currentTime - lastWiFiConnectionTime < WIFI_CLIENT_RECONNECT_PERIOD) {
+        return;
+    }
+
+    WiFiClient client;
+
+    Serial.print("connecting to ");
+    Serial.print(host);
+    Serial.print(':');
+    Serial.println(port);
+
+    if (currentTime - lastWiFiReonnectionAttemptTime < WIFI_CLIENT_RECONNECT_PERIOD) {
+        return;
+    }
+
+    // Use WiFiClient class to create TCP connections
+    if (!client.connect(host, port)) {
+        Serial.println("connection failedstill. waiting.");
+        lastWiFiReonnectionAttemptTime = currentTime;
+        // delay(5000);
+        return;
+    }
+
+    // This will send a string to the server
+    Serial.println("sending data to server");
+    if (client.connected()) { 
+        client.println(httpRequestData);
+    }
+
+    // wait for data to be available
+    unsigned long timeout = millis();
+    while (client.available() == 0) {
+        if (currentTime - timeout > 5000) {
+            Serial.println(">>> Client Timeout !");
+            client.stop();
+            // delay(60000);
+            return;
+        }
+    }
+
+    // Read all the lines of the reply from server and print them to Serial
+    Serial.println("receiving from remote server");
+    // not testing 'client.connected()' since we do not need to send data here
+    while (client.available()) {
+        char ch = static_cast<char>(client.read());
+        Serial.print(ch);
+    }
+
+    // Close the connection
+    Serial.println();
+    Serial.println("closing connection");
+    client.stop();
+
+    lastWiFiConnectionTime = currentTime;
+}
+
+void postHttpRequest(String httpRequestData)
+{
+    unsigned long currentTime = millis();
+
+    if (currentTime - lastWiFiConnectionTime < WIFI_CLIENT_RECONNECT_PERIOD) {
+        return;
+    }
+
+    if (WiFi.status() == WL_CONNECTED) {
+        WiFiClient client;
+        HTTPClient http;
+
+        http.begin(client, host);
+
+        // If you need Node-RED/server authentication, insert user and password below
+        //http.setAuthorization("REPLACE_WITH_SERVER_USERNAME", "REPLACE_WITH_SERVER_PASSWORD");
+
+        // http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        // String httpRequestData = "api_key=tPmAT5Ab3j7F9&sensor=BME280&value1=24.25&value2=49.54&value3=1005.14";           
+        // int httpResponseCode = http.POST(httpRequestData);
+
+        // If you need an HTTP request with a content type: application/json, use the following:
+        // http.addHeader("Content-Type", "application/json");
+        // int httpResponseCode = http.POST("{\"api_key\":\"tPmAT5Ab3j7F9\",\"sensor\":\"BME280\",\"value1\":\"24.25\",\"value2\":\"49.54\",\"value3\":\"1005.14\"}");
+
+        // If you need an HTTP request with a content type: text/plain
+        http.addHeader("Content-Type", "text/plain");
+        int httpResponseCode = http.POST(httpRequestData);
+
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+
+        // Free resources
+        http.end();
+    }
+    else {
+        Serial.println("WiFi Disconnected");
+    }
+
+    lastWiFiConnectionTime = currentTime;
+}
+
 void initMidi()
 {
     currentSignalIndex = 0;
@@ -258,17 +385,51 @@ void initMidi()
     lastDebugMessageTime = 0;
 }
 
+void initWiFi()
+{
+    lastWiFiConnectionTime = 0;
+    lastWiFiReonnectionAttemptTime = 0;
+
+    #ifdef MODE_DEBUG
+        Serial.setDebugOutput(true);
+    #endif
+
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    ip = WiFi.localIP().toString();
+
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(ip);
+    
+    // ESP8266 has the ability to automatically reconnect to your router
+    // WiFi.setAutoReconnect(true);
+    // WiFi.persistent(true);
+}
+
 void setup() {
     pinMode(MIDI_NOTE_INDICATOR_PIN, OUTPUT);
     pinMode(MIDI_PAD_PIN, OUTPUT);
     digitalWrite(MIDI_PAD_PIN, LOW);
 
     Serial.begin(SERIAL_RATE);
+    
+    delay(10);
 
+    initWiFi();
     initMidi();
 }
 
 void loop()
 {
     listenPad();
+
+    ltoa(lastNoteTime, buffer, 16);
+    postHttpRequestSimple(buffer);
 }
