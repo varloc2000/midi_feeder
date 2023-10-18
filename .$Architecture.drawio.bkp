@@ -1,0 +1,201 @@
+<mxfile host="Electron" modified="2023-10-17T20:11:55.973Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="cDibjtIJFy3bI1IHCMPe" version="22.0.2" type="device">
+  <diagram name="Page-1" id="tkD0wkEbDgHVyA2Hgazl">
+    <mxGraphModel dx="2440" dy="2508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-3" value="ESP32&lt;br&gt;- Detect sensors&lt;br&gt;- Start/Stop CAM recording using GPIO&lt;br&gt;- Connect to stream server by IP&lt;br&gt;- Read stream from CAM&lt;br&gt;- Send CAM stream to server to SIM800 using GPIO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="360" y="240" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-4" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="40" y="240" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-5" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Nn5vxj2zcvLJqd6D5r_o-4" target="Nn5vxj2zcvLJqd6D5r_o-3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="390" as="sourcePoint" />
+            <mxPoint x="440" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-6" value="WIFI" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Nn5vxj2zcvLJqd6D5r_o-5" vertex="1" connectable="0">
+          <mxGeometry x="-0.3692" y="-3" relative="1" as="geometry">
+            <mxPoint x="29" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-9" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="1" source="Nn5vxj2zcvLJqd6D5r_o-4" target="Nn5vxj2zcvLJqd6D5r_o-3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="480" as="sourcePoint" />
+            <mxPoint x="280" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-10" value="GPIO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Nn5vxj2zcvLJqd6D5r_o-9" vertex="1" connectable="0">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-11" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="420" y="90" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Nn5vxj2zcvLJqd6D5r_o-11" target="Nn5vxj2zcvLJqd6D5r_o-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Nn5vxj2zcvLJqd6D5r_o-13" target="Nn5vxj2zcvLJqd6D5r_o-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-13" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="100" y="100" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-15" value="SIM800&lt;br&gt;- Receive CAM stream from ESP32&lt;br&gt;- Send CAM stream to statis IP server using GSM" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="680" y="240" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-16" value="Mobile Network" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="30" y="620" width="1640" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-17" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" parent="1" vertex="1">
+          <mxGeometry x="745" y="500" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-19" value="WIFI Network" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="30" y="930" width="1640" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-20" value="DB&lt;br&gt;- Feeder ID&lt;br&gt;- Date&lt;br&gt;- Sensor data&lt;br&gt;- CAM stream file" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="1040" y="743.75" width="112.5" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-21" value="&lt;b&gt;HTTP Web server&lt;br&gt;UI:&lt;/b&gt;&lt;br&gt;- View CAM records&amp;nbsp;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;- See online Feeders IDs&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;- See baterries power of Feeders&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;- On/Off Feeders manually on demand&lt;br&gt;- Simulate Feeders sensors" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="800" y="717.5" width="197.56" height="202.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="Nn5vxj2zcvLJqd6D5r_o-21" target="Nn5vxj2zcvLJqd6D5r_o-20" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-24" value="ESP32&lt;br&gt;-&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="798.78" y="1190" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Nn5vxj2zcvLJqd6D5r_o-25" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" parent="1" vertex="1">
+          <mxGeometry x="863.78" y="1050" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-1" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1040" y="240" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-2" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="1040" y="90" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-3" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="1160" y="90" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.805;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="ozHjbx9IF2q9VOnE5i5a-3" target="ozHjbx9IF2q9VOnE5i5a-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.2;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="ozHjbx9IF2q9VOnE5i5a-2" target="ozHjbx9IF2q9VOnE5i5a-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-7" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="440" as="sourcePoint" />
+            <mxPoint x="680" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-8" value="GPIO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ozHjbx9IF2q9VOnE5i5a-7" vertex="1" connectable="0">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-9" value="SIM800&lt;br&gt;- Receive CAM stream from ESP32&lt;br&gt;- Send CAM stream to statis IP server using GSM" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="240" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-10" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1240" y="440" as="sourcePoint" />
+            <mxPoint x="1360" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-11" value="GPIO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ozHjbx9IF2q9VOnE5i5a-10" vertex="1" connectable="0">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ozHjbx9IF2q9VOnE5i5a-12" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" parent="1" vertex="1">
+          <mxGeometry x="1425" y="500" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-1" value="Mesh Local network" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="30" y="-90" width="1640" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-2" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="320" y="-480" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-3" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="320" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-4" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="440" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.805;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-4" target="a_Lwvrfrlr2KeFpkuk4D-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.2;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-3" target="a_Lwvrfrlr2KeFpkuk4D-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-7" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="640" y="-480" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-8" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="640" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-9" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="760" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.805;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-9" target="a_Lwvrfrlr2KeFpkuk4D-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.2;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-8" target="a_Lwvrfrlr2KeFpkuk4D-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-12" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="958.78" y="-480" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-13" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="958.78" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-14" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1078.78" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.805;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-14" target="a_Lwvrfrlr2KeFpkuk4D-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.2;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-13" target="a_Lwvrfrlr2KeFpkuk4D-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-17" value="ESP32-CAM&lt;br&gt;&lt;br&gt;- Provide streaming server on IP&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="-480" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-18" value="CAM" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-19" value="vibration&lt;br&gt;sensor" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="-630" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.805;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-19" target="a_Lwvrfrlr2KeFpkuk4D-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.2;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="a_Lwvrfrlr2KeFpkuk4D-18" target="a_Lwvrfrlr2KeFpkuk4D-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-23" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="1305" y="-220" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-24" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="1023.78" y="-220" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-25" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="705" y="-220" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-26" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="380" y="-220" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-27" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="20" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="a_Lwvrfrlr2KeFpkuk4D-28" value="" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.arrow;dy=0.6;dx=40;direction=south;notch=0;" vertex="1" parent="1">
+          <mxGeometry x="1105" width="70" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
